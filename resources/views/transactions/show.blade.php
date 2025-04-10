@@ -7,7 +7,9 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h3 class="mb-0">Détails de la transaction</h3>
+                    @if (Auth::user()->isAdmin())
                     <a href="{{ route('transactions.edit', $transaction) }}" class="btn btn-primary">Modifier</a>
+                    @endif
                 </div>
 
                 <div class="card-body">
@@ -44,6 +46,7 @@
 
                     <div class="d-flex justify-content-between">
                         <a href="{{ route('transactions.index') }}" class="btn btn-secondary">Retour à la liste</a>
+                        @if (Auth::user()->isAdmin())
                         <form action="{{ route('transactions.destroy', $transaction) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
@@ -51,6 +54,7 @@
                                 Supprimer la transaction
                             </button>
                         </form>
+                        @endif
                     </div>
                 </div>
             </div>

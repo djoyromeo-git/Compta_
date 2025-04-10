@@ -31,31 +31,33 @@ Auth::routes();
 
 // Routes protégées
 Route::middleware(['auth'])->group(function () {
+    // Routes pour (admin uniquement)
+    Route::middleware(['admin'])->group(function () {
+        Route::resource('users', UserController::class);
+
+        // Routes pour la gestion des sites
+        Route::resource('sites', SiteController::class);
+
+        // Routes pour la gestion des devises
+        Route::resource('currencies', CurrencyController::class);
+
+        // Routes pour les rapports PDF
+        Route::get('/reports/transactions', [ReportController::class, 'transactionsReport'])->name('reports.transactions');
+        Route::get('/reports/dashboard', [ReportController::class, 'dashboardReport'])->name('reports.dashboard');
+
+        // Routes pour la gestion des types de transactions
+        Route::resource('transaction-types', TransactionTypeController::class)->except(['show']);
+    });
+
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    
-    // Routes pour la gestion des sites
-    Route::resource('sites', SiteController::class);
-    
-    // Routes pour la gestion des transactions
-    Route::resource('transactions', TransactionController::class);
-    
-    // Routes pour la gestion des devises
-    Route::resource('currencies', CurrencyController::class);
-    
-    // Routes pour la gestion des types de transactions
-    Route::resource('transaction-types', TransactionTypeController::class)->except(['show']);
 
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // Routes pour les rapports PDF
-    Route::get('/reports/transactions', [ReportController::class, 'transactionsReport'])->name('reports.transactions');
-    Route::get('/reports/dashboard', [ReportController::class, 'dashboardReport'])->name('reports.dashboard');
+    // Routes pour la gestion des transactions
+    Route::resource('transactions', TransactionController::class);
 });
 
-// Routes pour la gestion des utilisateurs (admin uniquement)
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::resource('users', UserController::class);
-});
+
 
 // Routes pour les responsables de site (transactions restreintes)
 Route::resource('transactions', TransactionController::class);

@@ -31,7 +31,7 @@
                                 @foreach($categories as $category)
                                     <option value="{{ $category->id }}" 
                                         {{ (old('site_category_id', $site->site_category_id) == $category->id) ? 'selected' : '' }}>
-                                        {{ $category->value }}
+                                        {{ $category->name }}
                                     </option>
                                 @endforeach
                             </select>
@@ -48,7 +48,7 @@
                                 @foreach($people as $person)
                                     <option value="{{ $person->id }}" 
                                         {{ (old('person_id', $site->person_id) == $person->id) ? 'selected' : '' }}>
-                                        {{ $person->firstname }} {{ $person->lastname }}
+                                        {{ $person->first_name }} {{ $person->last_name }}
                                     </option>
                                 @endforeach
                             </select>

@@ -102,6 +102,7 @@
                                             <a href="{{ route('transactions.show', $transaction) }}" class="btn btn-sm btn-primary">
                                                 Voir
                                             </a>
+                                            @if (Auth::user()->isAdmin())
                                             <a href="{{ route('transactions.edit', $transaction) }}" class="btn btn-sm btn-info">
                                                 Modifier
                                             </a>
@@ -110,8 +111,9 @@
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette transaction ?')">
                                                     Supprimer
-                                                </button>
-                                            </form>
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </td>
                                     </tr>
                                 @endforeach

@@ -33,32 +33,33 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         @auth
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('sites.index') }}">
-                                    <i class="fas fa-building"></i> Sites
-                                </a>
-                            </li>
+                    
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('transactions.index') }}">
                                     <i class="fas fa-exchange-alt"></i> Transactions
                                 </a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('currencies.index') }}">
-                                    <i class="fas fa-money-bill"></i> Devises
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('transaction-types.index') }}">
-                                    <i class="fas fa-tags"></i> Types de transactions
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('dashboard') }}">
-                                    <i class="fas fa-chart-line"></i> Dashboard
-                                </a>
-                            </li>
                             @if (Auth::user()->isAdmin())
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('sites.index') }}">
+                                        <i class="fas fa-building"></i> Sites
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('currencies.index') }}">
+                                        <i class="fas fa-money-bill"></i> Devises
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('transaction-types.index') }}">
+                                        <i class="fas fa-tags"></i> Types de transactions
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('dashboard') }}">
+                                        <i class="fas fa-chart-line"></i> Dashboard
+                                    </a>
+                                </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="{{ route('users.index') }}">
                                         <i class="fas fa-users"></i> Utilisateurs
