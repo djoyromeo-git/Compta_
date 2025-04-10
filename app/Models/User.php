@@ -9,6 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Person;
 use App\Models\Transaction;
+use App\Models\Site;
 
 class User extends Authenticatable
 {
@@ -23,7 +24,8 @@ class User extends Authenticatable
         'username',
         'email',
         'password',
-        'person_id'
+        'person_id',
+        'role'
     ];
 
     /**
@@ -54,5 +56,21 @@ class User extends Authenticatable
     public function transactions()
     {
         return $this->hasMany(Transaction::class);
+    }
+
+    /**
+     * Get the site associated with the user through the person.
+     */
+    public function site()
+    {
+        return $this->hasOneThrough(Site::class, Person::class, 'id', 'person_id', 'person_id', 'id');
+    }
+
+    /**
+     * Vérifie si l'utilisateur est un administrateur.
+     */
+    public function isAdmin()
+    {
+        return $this->role === 'admin';
     }
 }

@@ -9,6 +9,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TransactionTypeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -50,3 +51,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/reports/transactions', [ReportController::class, 'transactionsReport'])->name('reports.transactions');
     Route::get('/reports/dashboard', [ReportController::class, 'dashboardReport'])->name('reports.dashboard');
 });
+
+// Routes pour la gestion des utilisateurs (admin uniquement)
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::resource('users', UserController::class);
+});
+
+// Routes pour les responsables de site (transactions restreintes)
+Route::resource('transactions', TransactionController::class);

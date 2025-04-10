@@ -58,6 +58,13 @@
                                     <i class="fas fa-chart-line"></i> Dashboard
                                 </a>
                             </li>
+                            @if (Auth::user()->isAdmin())
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('users.index') }}">
+                                        <i class="fas fa-users"></i> Utilisateurs
+                                    </a>
+                                </li>
+                            @endif
                         @endauth
                     </ul>
 

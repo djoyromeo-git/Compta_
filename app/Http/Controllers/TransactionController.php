@@ -38,6 +38,11 @@ class TransactionController extends Controller
                 $q->where('code', $selectedCurrency);
             });
         }
+
+        // Filtrer par site si l'utilisateur n'est pas admin
+        if (Auth::user()->role !== 'admin') {
+            $query->where('site_id', Auth::user()->site_id);
+        }
         
         // Récupérer les transactions
         $transactions = $query->orderBy('date', 'desc')->paginate(10);
@@ -59,7 +64,11 @@ class TransactionController extends Controller
      */
     public function create()
     {
-        $sites = Site::all();
+        // Récupérer les sites selon le rôle de l'utilisateur
+        $sites = Auth::user()->role === 'admin' 
+            ? Site::all() 
+            : Site::where('person_id', Auth::user()->person_id)->get();
+
         $transactionTypes = TransactionType::all();
         $currencies = Currency::all();
 
@@ -79,7 +88,16 @@ class TransactionController extends Controller
             'description' => 'nullable|string'
         ]);
 
+        $site = Site::findOrFail($validated['site_id']);
+
+        // Vérifier si l'utilisateur a le droit d'ajouter une transaction pour ce site
+        if (Auth::user()->role !== 'admin' && Auth::user()->person_id != $site->person_id) {
+            return redirect()->back()
+                ->with('error', 'Vous n\'avez pas l\'autorisation d\'ajouter une transaction pour ce site.');
+        }
+
         $validated['user_id'] = Auth::id();
+        $validated['date'] = now();
 
         Transaction::create($validated);
 
@@ -92,6 +110,12 @@ class TransactionController extends Controller
      */
     public function show(Transaction $transaction)
     {
+        // Vérifier si l'utilisateur a le droit de voir cette transaction
+        if (Auth::user()->role !== 'admin' && Auth::user()->site_id != $transaction->site_id) {
+            return redirect()->route('transactions.index')
+                ->with('error', 'Vous n\'avez pas l\'autorisation de voir cette transaction.');
+        }
+
         $transaction->load(['site', 'type', 'currency', 'user']);
         return view('transactions.show', compact('transaction'));
     }
@@ -101,7 +125,17 @@ class TransactionController extends Controller
      */
     public function edit(Transaction $transaction)
     {
-        $sites = Site::all();
+        // Vérifier si l'utilisateur a le droit de modifier cette transaction
+        if (Auth::user()->role !== 'admin' && Auth::user()->site_id != $transaction->site_id) {
+            return redirect()->route('transactions.index')
+                ->with('error', 'Vous n\'avez pas l\'autorisation de modifier cette transaction.');
+        }
+
+        // Récupérer les sites selon le rôle de l'utilisateur
+        $sites = Auth::user()->role === 'admin' 
+            ? Site::all() 
+            : Site::where('id', Auth::user()->site_id)->get();
+
         $transactionTypes = TransactionType::all();
         $currencies = Currency::all();
 
@@ -113,6 +147,12 @@ class TransactionController extends Controller
      */
     public function update(Request $request, Transaction $transaction)
     {
+        // Vérifier si l'utilisateur a le droit de modifier cette transaction
+        if (Auth::user()->role !== 'admin' && Auth::user()->site_id != $transaction->site_id) {
+            return redirect()->route('transactions.index')
+                ->with('error', 'Vous n\'avez pas l\'autorisation de modifier cette transaction.');
+        }
+
         $validated = $request->validate([
             'site_id' => 'required|exists:sites,id',
             'transaction_type_id' => 'required|exists:transaction_types,id',
@@ -120,6 +160,12 @@ class TransactionController extends Controller
             'amount' => 'required|numeric|min:0.01',
             'description' => 'nullable|string'
         ]);
+
+        // Vérifier si l'utilisateur a le droit de modifier le site de la transaction
+        if (Auth::user()->role !== 'admin' && Auth::user()->site_id != $validated['site_id']) {
+            return redirect()->back()
+                ->with('error', 'Vous n\'avez pas l\'autorisation de modifier le site de cette transaction.');
+        }
 
         $transaction->update($validated);
 
@@ -132,6 +178,12 @@ class TransactionController extends Controller
      */
     public function destroy(Transaction $transaction)
     {
+        // Vérifier si l'utilisateur a le droit de supprimer cette transaction
+        if (Auth::user()->role !== 'admin' && Auth::user()->site_id != $transaction->site_id) {
+            return redirect()->route('transactions.index')
+                ->with('error', 'Vous n\'avez pas l\'autorisation de supprimer cette transaction.');
+        }
+
         $transaction->delete();
 
         return redirect()->route('transactions.index')
