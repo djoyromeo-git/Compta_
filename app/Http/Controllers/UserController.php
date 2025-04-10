@@ -15,7 +15,7 @@ class UserController extends Controller
      */
     public function index()
     {
-        $users = User::with('site')->get();
+        $users = User::all();
         return view('users.index', compact('users'));
     }
 
@@ -24,8 +24,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        $sites = Site::all();
-        return view('users.create', compact('sites'));
+        return view('users.create');
     }
 
     /**
@@ -38,7 +37,6 @@ class UserController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
-            'site_id' => 'nullable|exists:sites,id',
         ]);
 
         $person = Person::create([
@@ -52,13 +50,6 @@ class UserController extends Controller
             'person_id' => $person->id,
         ]);
 
-        // Si un site est sélectionné, on l'associe à l'utilisateur
-        if ($request->input('site_id')) {
-            DB::table('sites')->where('id', $request->input('site_id'))->update([
-                'person_id' => $person->id,
-            ]);
-        }
-
         return redirect()->route('users.index')->with('success', 'User created successfully.');
     }
 
@@ -67,8 +58,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
-        $sites = Site::all();
-        return view('users.edit', compact('user', 'sites'));
+        return view('users.edit', compact('user'));
     }
 
     /**
@@ -81,7 +71,6 @@ class UserController extends Controller
             'last_name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8',
-            'site_id' => 'nullable|exists:sites,id',
         ]);
 
         $user->update([
@@ -94,13 +83,6 @@ class UserController extends Controller
             'last_name' => $request->input('last_name'),
         ]);
 
-        // Si un site est sélectionné, on l'associe à l'utilisateur
-        if ($request->input('site_id')) {
-            DB::table('sites')->where('id', $request->input('site_id'))->update([
-                'person_id' => $user->person->id,
-            ]);
-        }
-
         return redirect()->route('users.index')->with('success', 'User updated successfully.');
     }
 
@@ -109,11 +91,6 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        // Vérifier si l'utilisateur est associé à un site
-        if ($user->site) {
-            return redirect()->route('users.index')->with('error', 'L\'utilisateur est associé à un site et ne peut pas être supprimé.');
-        }
-
         $user->delete();
         return redirect()->route('users.index')->with('success', 'User deleted successfully.');
     }

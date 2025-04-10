@@ -30,7 +30,6 @@
                                     <th>Nom</th>
                                     <th>Email</th>
                                     <th>Rôle</th>
-                                    <th>Site</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -40,7 +39,6 @@
                                     <td>{{ $user->person->first_name }} {{ $user->person->last_name }}</td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ $user->role }}</td>
-                                    <td>{{ $user->site->name ?? 'Aucun' }}</td>
                                     <td>
                                         <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-info">
                                             Modifier
