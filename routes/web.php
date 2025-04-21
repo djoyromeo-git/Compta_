@@ -57,7 +57,5 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('transactions', TransactionController::class);
 });
 
-
-
 // Routes pour les responsables de site (transactions restreintes)
 Route::resource('transactions', TransactionController::class);

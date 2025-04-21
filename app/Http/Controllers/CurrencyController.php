@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreCurrencyRequest;
+use App\Http\Requests\UpdateCurrencyRequest;
 use App\Models\Currency;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 
 class CurrencyController extends Controller
 {
     /**
      * Display a listing of the currencies.
      */
-    public function index()
+    public function index() : View
     {
-        $currencies = Currency::all();
-        return view('currencies.index', compact('currencies'));
+        return view('currencies.index', [
+            'currencies' => Currency::all()
+        ]);
     }
 
     /**
@@ -28,15 +32,9 @@ class CurrencyController extends Controller
     /**
      * Store a newly created currency in storage.
      */
-    public function store(Request $request)
+    public function store(StoreCurrencyRequest $request) : RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:currencies',
-            'code' => 'required|string|max:3|unique:currencies',
-            'symbol' => 'required|string|max:10'
-        ]);
-
-        Currency::create($validated);
+        Currency::create($request->only('name', 'code', 'symbol'));
 
         return redirect()->route('currencies.index')
             ->with('success', 'Devise créée avec succès.');
@@ -45,7 +43,7 @@ class CurrencyController extends Controller
     /**
      * Show the form for editing the specified currency.
      */
-    public function edit(Currency $currency)
+    public function edit(Currency $currency) : View
     {
         return view('currencies.edit', compact('currency'));
     }
@@ -53,15 +51,9 @@ class CurrencyController extends Controller
     /**
      * Update the specified currency in storage.
      */
-    public function update(Request $request, Currency $currency)
+    public function update(UpdateCurrencyRequest $request, Currency $currency): RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255|unique:currencies,name,' . $currency->id,
-            'code' => 'required|string|max:3|unique:currencies,code,' . $currency->id,
-            'symbol' => 'required|string|max:10'
-        ]);
-
-        $currency->update($validated);
+        $currency->update($request->only('name', 'code', 'symbol'));
 
         return redirect()->route('currencies.index')
             ->with('success', 'Devise mise à jour avec succès.');
@@ -70,7 +62,7 @@ class CurrencyController extends Controller
     /**
      * Remove the specified currency from storage.
      */
-    public function destroy(Currency $currency)
+    public function destroy(Currency $currency): RedirectResponse
     {
         if ($currency->transactions()->exists()) {
             return back()->with('error', 'Impossible de supprimer cette devise car elle est utilisée dans des transactions.');
