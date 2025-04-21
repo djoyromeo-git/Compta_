@@ -11,12 +11,6 @@
                 </div>
 
                 <div class="card-body">
-                    @if (session('success'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
@@ -55,4 +49,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection

@@ -2,94 +2,118 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreSiteRequest;
+use App\Http\Requests\UpdateSiteRequest;
 use App\Models\Site;
 use App\Models\Person;
 use App\Models\SiteCategory;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 
 class SiteController extends Controller
 {
     /**
-     * Display a listing of the sites.
+     * Affiche la liste des sites.
+     *
+     * @return View La vue affichant la liste des sites
      */
-    public function index()
+    public function index() : View
     {
-        $sites = Site::with(['category', 'person'])->get();
-        return view('sites.index', compact('sites'));
-    }
-
-    /**
-     * Show the form for creating a new site.
-     */
-    public function create()
-    {
-        $categories = SiteCategory::all();
-        $people = Person::all();
-        return view('sites.create', compact('categories', 'people'));
-    }
-
-    /**
-     * Store a newly created site in storage.
-     */
-    public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'site_category_id' => 'required|exists:site_categories,id',
-            'person_id' => 'required|exists:people,id',
-            'address' => 'nullable|string'
+        return view('sites.index', [
+            'sites' => Site::with(['category', 'person'])->get(),
         ]);
+    }
 
-        Site::create($validated);
+    /**
+     * Affiche le formulaire de création d'un nouveau site.
+     * 
+     * @return View La vue du formulaire de création
+     */
+    public function create() : View
+    {
+        return view('sites.create', [
+            'people' => Person::all(),
+            'categories' => SiteCategory::all()
+        ]);
+    }
+
+    /**
+     * Stocke un nouveau site dans la base de données.
+     *
+     * @param StoreSiteRequest $request La requête validée contenant les données du site
+     * @return RedirectResponse Redirection vers la liste des sites avec un message de succès
+     */
+    public function store(StoreSiteRequest $request) : RedirectResponse
+    {
+        Site::create($request->only([
+            'name',
+            'site_category_id',
+            'person_id',
+            'address'
+        ]));
 
         return redirect()->route('sites.index')
             ->with('success', 'Site créé avec succès.');
     }
 
     /**
-     * Display the specified site.
+     * Affiche les détails d'un site spécifique.
+     *
+     * @param Site $site Le site à afficher
+     * @return View La vue affichant les détails du site
      */
-    public function show(Site $site)
+    public function show(Site $site) : View
     {
         $site->load(['category', 'person', 'transactions' => function($query) {
             $query->latest()->with(['type', 'currency']);
         }]);
-        
+
         return view('sites.show', compact('site'));
     }
 
     /**
-     * Show the form for editing the specified site.
+     * Affiche le formulaire de modification d'un site.
+     * 
+     * @param Site $site Le site à modifier
+     * @return View La vue du formulaire de modification
      */
     public function edit(Site $site)
     {
-        $categories = SiteCategory::all();
-        $people = Person::all();
-        return view('sites.edit', compact('site', 'categories', 'people'));
+        return view('sites.edit', [
+            'people' => Person::all(),
+            'categories' => SiteCategory::all(),
+            'site' => $site
+        ]);
     }
 
     /**
-     * Update the specified site in storage.
+     * Met à jour un site existant dans la base de données.
+     *
+     * @param UpdateSiteRequest $request La requête validée contenant les nouvelles données
+     * @param Site $site Le site à mettre à jour
+     * @return RedirectResponse Redirection vers la liste des sites avec un message de succès
      */
-    public function update(Request $request, Site $site)
+    public function update(UpdateSiteRequest $request, Site $site) : RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'site_category_id' => 'required|exists:site_categories,id',
-            'person_id' => 'required|exists:people,id',
-            'address' => 'nullable|string'
-        ]);
-
-        $site->update($validated);
+        $site->update($request->only([
+            'name',
+            'site_category_id',
+            'person_id',
+            'address'
+        ]));
 
         return redirect()->route('sites.index')
             ->with('success', 'Site mis à jour avec succès.');
     }
 
     /**
-     * Remove the specified site from storage.
+     * Supprime un site de la base de données.
+     *
+     * @param Site $site Le site à supprimer
+     * @return RedirectResponse Redirection vers la liste des sites avec un message de succès
      */
-    public function destroy(Site $site)
+    public function destroy(Site $site) : RedirectResponse
     {
         if ($site->transactions()->exists()) {
             return back()->with('error', 'Impossible de supprimer ce site car il contient des transactions.');

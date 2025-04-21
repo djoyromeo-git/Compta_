@@ -2,76 +2,83 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTransactionTypeRequest;
+use App\Http\Requests\UpdateTransactionTypeRequest;
 use App\Models\TransactionType;
-use Illuminate\Http\Request;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class TransactionTypeController extends Controller
 {
     /**
-     * Display a listing of the transaction types.
+     * Affiche la liste des types de transactions.
+     *
+     * @return View La vue affichant la liste des types de transactions
      */
-    public function index()
+    public function index() : View
     {
-        $transactionTypes = TransactionType::all();
-        return view('transaction-types.index', compact('transactionTypes'));
+        return view('transaction-types.index', [
+            'transaction_types' => TransactionType::all()
+        ]);
     }
 
     /**
-     * Show the form for creating a new transaction type.
+     * Affiche le formulaire de création d'un nouveau type de transaction.
+     * 
+     * @return View La vue du formulaire de création
      */
-    public function create()
+    public function create() : View
     {
         return view('transaction-types.create');
     }
 
     /**
-     * Store a newly created transaction type in storage.
+     * Stocke un nouveau type de transaction dans la base de données.
+     *
+     * @param StoreTransactionTypeRequest $request La requête validée contenant les données du type
+     * @return RedirectResponse Redirection vers la liste des types avec un message de succès
      */
-    public function store(Request $request)
+    public function store(StoreTransactionTypeRequest $request) : RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'is_credit' => 'required|boolean',
-            'color' => 'required|string|max:7'
-        ]);
-
-        TransactionType::create($validated);
+        TransactionType::create($request->all());
 
         return redirect()->route('transaction-types.index')
             ->with('success', 'Type de transaction créé avec succès.');
     }
 
     /**
-     * Show the form for editing the specified transaction type.
+     * Affiche le formulaire de modification d'un type de transaction.
+     * 
+     * @param TransactionType $transaction_type Le type de transaction à modifier
+     * @return View La vue du formulaire de modification
      */
-    public function edit(TransactionType $transactionType)
+    public function edit(TransactionType $transaction_type) : View
     {
-        return view('transaction-types.edit', compact('transactionType'));
+        return view('transaction-types.edit', compact('transaction_type'));
     }
 
     /**
-     * Update the specified transaction type in storage.
+     * Met à jour un type de transaction existant dans la base de données.
+     *
+     * @param UpdateTransactionTypeRequest $request La requête validée contenant les nouvelles données
+     * @param TransactionType $transactionType Le type de transaction à mettre à jour
+     * @return RedirectResponse Redirection vers la liste des types avec un message de succès
      */
-    public function update(Request $request, TransactionType $transactionType)
+    public function update(UpdateTransactionTypeRequest $request, TransactionType $transactionType) : RedirectResponse
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'is_credit' => 'required|boolean',
-            'color' => 'required|string|max:7'
-        ]);
-
-        $transactionType->update($validated);
+        $transactionType->update($request->only('name', 'description', 'is_credit'));
 
         return redirect()->route('transaction-types.index')
             ->with('success', 'Type de transaction mis à jour avec succès.');
     }
 
     /**
-     * Remove the specified transaction type from storage.
+     * Supprime un type de transaction de la base de données.
+     *
+     * @param TransactionType $transactionType Le type de transaction à supprimer
+     * @return RedirectResponse Redirection vers la liste des types avec un message de succès
      */
-    public function destroy(TransactionType $transactionType)
+    public function destroy(TransactionType $transactionType) : RedirectResponse
     {
         if ($transactionType->transactions()->exists()) {
             return back()->with('error', 'Impossible de supprimer ce type car il est utilisé dans des transactions.');

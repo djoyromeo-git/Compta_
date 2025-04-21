@@ -11,48 +11,46 @@
                 </div>
 
                 <div class="card-body">
-                    @if (session('success'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    @if (session('error'))
-                        <div class="alert alert-danger" role="alert">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
                                 <tr>
-                                    <th>Nom</th>
+                                    <th>Nom complet</th>
                                     <th>Email</th>
                                     <th>Rôle</th>
+                                    <th>Site</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($users as $user)
-                                <tr>
-                                    <td>{{ $user->person->first_name }} {{ $user->person->last_name }}</td>
-                                    <td>{{ $user->email }}</td>
-                                    <td>{{ $user->role }}</td>
-                                    <td>
-                                        <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-info">
-                                            Modifier
-                                        </a>
-                                        <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
-                                                Supprimer
-                                            </button>
-                                        </form>
-                                    </td>
-                                </tr>
-                                @endforeach
+                                @forelse ($users as $user)
+                                    <tr>
+                                        <td>{{ $user->person->first_name }} {{ $user->person->last_name }}</td>
+                                        <td>{{ $user->email }}</td>
+                                        <td>
+                                            <span class="badge bg-{{ $user->role === 'admin' ? 'primary' : 'secondary' }}">
+                                                {{ $user->role === 'admin' ? 'Administrateur' : 'Utilisateur' }}
+                                            </span>
+                                        </td>
+                                        <td>{{ $user->site->name ?? 'Aucun' }}</td>
+                                        <td>
+                                            <a href="{{ route('users.edit', $user) }}" class="btn btn-sm btn-info">
+                                                Modifier
+                                            </a>
+                                            <form action="{{ route('users.destroy', $user) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')">
+                                                    Supprimer
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center">Aucun utilisateur trouvé</td>
+                                    </tr>
+                                @endforelse
                             </tbody>
                         </table>
                     </div>
