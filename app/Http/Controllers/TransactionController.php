@@ -17,7 +17,10 @@ use Illuminate\View\View;
 class TransactionController extends Controller
 {
     /**
-     * Display a listing of the transactions.
+     * Affiche la liste des transactions avec filtrage par date et devise.
+     *
+     * @param Request $request La requête HTTP contenant les paramètres de filtrage
+     * @return View La vue affichant la liste des transactions
      */
     public function index(Request $request) : View
     {
@@ -65,7 +68,9 @@ class TransactionController extends Controller
     }
 
     /**
-     * Show the form for creating a new transaction.
+     * Affiche le formulaire de création d'une nouvelle transaction.
+     * 
+     * @return View La vue du formulaire de création
      */
     public function create() : View
     {
@@ -81,7 +86,11 @@ class TransactionController extends Controller
     }
 
     /**
-     * Store a newly created transaction in storage.
+     * Stocke une nouvelle transaction dans la base de données.
+     *
+     * @param StoreTransactionRequest $request La requête validée contenant les données de la transaction
+     * @return RedirectResponse Redirection vers la liste des transactions avec un message de succès
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException Si le site n'existe pas
      */
     public function store(StoreTransactionRequest $request): RedirectResponse
     {
@@ -106,7 +115,10 @@ class TransactionController extends Controller
     }
 
     /**
-     * Display the specified transaction.
+     * Affiche les détails d'une transaction spécifique.
+     *
+     * @param Transaction $transaction La transaction à afficher
+     * @return View La vue affichant les détails de la transaction
      */
     public function show(Transaction $transaction) : View
     {
@@ -115,7 +127,10 @@ class TransactionController extends Controller
     }
 
     /**
-     * Show the form for editing the specified transaction.
+     * Affiche le formulaire de modification d'une transaction.
+     * 
+     * @param Transaction $transaction La transaction à modifier
+     * @return View|RedirectResponse La vue du formulaire ou une redirection si non autorisé
      */
     public function edit(Transaction $transaction) : View|RedirectResponse
     {
@@ -133,7 +148,11 @@ class TransactionController extends Controller
     }
 
     /**
-     * Update the specified transaction in storage.
+     * Met à jour une transaction existante dans la base de données.
+     *
+     * @param UpdateTransactionRequest $request La requête validée contenant les nouvelles données
+     * @param Transaction $transaction La transaction à mettre à jour
+     * @return RedirectResponse Redirection vers la liste des transactions avec un message de succès
      */
     public function update(UpdateTransactionRequest $request, Transaction $transaction) : RedirectResponse
     {
@@ -150,7 +169,10 @@ class TransactionController extends Controller
     }
 
     /**
-     * Remove the specified transaction from storage.
+     * Supprime une transaction de la base de données.
+     *
+     * @param Transaction $transaction La transaction à supprimer
+     * @return RedirectResponse Redirection vers la liste des transactions avec un message de succès
      */
     public function destroy(Transaction $transaction) : RedirectResponse
     {

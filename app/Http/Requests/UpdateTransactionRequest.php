@@ -29,4 +29,25 @@ class UpdateTransactionRequest extends FormRequest
             'description' => 'nullable|string'
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'site_id.required' => 'Le site est obligatoire.',
+            'site_id.exists' => 'Le site sélectionné n\'existe pas.',
+            'transaction_type_id.required' => 'Le type de transaction est obligatoire.',
+            'transaction_type_id.exists' => 'Le type de transaction sélectionné n\'existe pas.',
+            'currency_id.required' => 'La devise est obligatoire.',
+            'currency_id.exists' => 'La devise sélectionnée n\'existe pas.',
+            'amount.required' => 'Le montant est obligatoire.',
+            'amount.numeric' => 'Le montant doit être un nombre.',
+            'amount.min' => 'Le montant doit être supérieur à 0.',
+            'description.string' => 'La description doit être une chaîne de caractères.'
+        ];
+    }
 }

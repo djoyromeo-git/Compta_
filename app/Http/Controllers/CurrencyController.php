@@ -6,13 +6,14 @@ use App\Http\Requests\StoreCurrencyRequest;
 use App\Http\Requests\UpdateCurrencyRequest;
 use App\Models\Currency;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class CurrencyController extends Controller
 {
     /**
-     * Display a listing of the currencies.
+     * Affiche la liste des devises.
+     *
+     * @return View La vue affichant la liste des devises
      */
     public function index() : View
     {
@@ -22,7 +23,9 @@ class CurrencyController extends Controller
     }
 
     /**
-     * Show the form for creating a new currency.
+     * Affiche le formulaire de création d'une nouvelle devise.
+     * 
+     * @return View La vue du formulaire de création
      */
     public function create()
     {
@@ -30,7 +33,10 @@ class CurrencyController extends Controller
     }
 
     /**
-     * Store a newly created currency in storage.
+     * Stocke une nouvelle devise dans la base de données.
+     *
+     * @param StoreCurrencyRequest $request La requête validée contenant les données de la devise
+     * @return RedirectResponse Redirection vers la liste des devises avec un message de succès
      */
     public function store(StoreCurrencyRequest $request) : RedirectResponse
     {
@@ -49,7 +55,11 @@ class CurrencyController extends Controller
     }
 
     /**
-     * Update the specified currency in storage.
+     * Met à jour une devise existante dans la base de données.
+     *
+     * @param UpdateCurrencyRequest $request La requête validée contenant les nouvelles données
+     * @param Currency $currency La devise à mettre à jour
+     * @return RedirectResponse Redirection vers la liste des devises avec un message de succès
      */
     public function update(UpdateCurrencyRequest $request, Currency $currency): RedirectResponse
     {
@@ -60,7 +70,10 @@ class CurrencyController extends Controller
     }
 
     /**
-     * Remove the specified currency from storage.
+     * Supprime une devise de la base de données.
+     *
+     * @param Currency $currency La devise à supprimer
+     * @return RedirectResponse Redirection vers la liste des devises avec un message de succès
      */
     public function destroy(Currency $currency): RedirectResponse
     {

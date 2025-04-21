@@ -14,7 +14,9 @@ use Illuminate\View\View;
 class SiteController extends Controller
 {
     /**
-     * Display a listing of the sites.
+     * Affiche la liste des sites.
+     *
+     * @return View La vue affichant la liste des sites
      */
     public function index() : View
     {
@@ -24,7 +26,9 @@ class SiteController extends Controller
     }
 
     /**
-     * Show the form for creating a new site.
+     * Affiche le formulaire de création d'un nouveau site.
+     * 
+     * @return View La vue du formulaire de création
      */
     public function create() : View
     {
@@ -35,9 +39,12 @@ class SiteController extends Controller
     }
 
     /**
-     * Store a newly created site in storage.
+     * Stocke un nouveau site dans la base de données.
+     *
+     * @param StoreSiteRequest $request La requête validée contenant les données du site
+     * @return RedirectResponse Redirection vers la liste des sites avec un message de succès
      */
-    public function store(StoreSiteRequest $request): RedirectResponse
+    public function store(StoreSiteRequest $request) : RedirectResponse
     {
         Site::create($request->only([
             'name',
@@ -51,7 +58,10 @@ class SiteController extends Controller
     }
 
     /**
-     * Display the specified site.
+     * Affiche les détails d'un site spécifique.
+     *
+     * @param Site $site Le site à afficher
+     * @return View La vue affichant les détails du site
      */
     public function show(Site $site) : View
     {
@@ -63,7 +73,10 @@ class SiteController extends Controller
     }
 
     /**
-     * Show the form for editing the specified site.
+     * Affiche le formulaire de modification d'un site.
+     * 
+     * @param Site $site Le site à modifier
+     * @return View La vue du formulaire de modification
      */
     public function edit(Site $site)
     {
@@ -75,7 +88,11 @@ class SiteController extends Controller
     }
 
     /**
-     * Update the specified site in storage.
+     * Met à jour un site existant dans la base de données.
+     *
+     * @param UpdateSiteRequest $request La requête validée contenant les nouvelles données
+     * @param Site $site Le site à mettre à jour
+     * @return RedirectResponse Redirection vers la liste des sites avec un message de succès
      */
     public function update(UpdateSiteRequest $request, Site $site) : RedirectResponse
     {
@@ -91,7 +108,10 @@ class SiteController extends Controller
     }
 
     /**
-     * Remove the specified site from storage.
+     * Supprime un site de la base de données.
+     *
+     * @param Site $site Le site à supprimer
+     * @return RedirectResponse Redirection vers la liste des sites avec un message de succès
      */
     public function destroy(Site $site) : RedirectResponse
     {

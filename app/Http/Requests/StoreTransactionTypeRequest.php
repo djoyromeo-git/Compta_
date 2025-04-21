@@ -27,4 +27,21 @@ class StoreTransactionTypeRequest extends FormRequest
             'is_credit' => 'required|boolean',
         ];
     }
+
+    /**
+     * Get the error messages for the defined validation rules.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'name.required' => 'Le nom du type de transaction est obligatoire.',
+            'name.string' => 'Le nom du type de transaction doit être une chaîne de caractères.',
+            'name.max' => 'Le nom du type de transaction ne doit pas dépasser 255 caractères.',
+            'description.string' => 'La description doit être une chaîne de caractères.',
+            'is_credit.required' => 'Le type de transaction (crédit/débit) est obligatoire.',
+            'is_credit.boolean' => 'Le type de transaction doit être vrai ou faux.'
+        ];
+    }
 }
