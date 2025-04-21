@@ -24,14 +24,14 @@
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="start_date">Date de début</label>
-                                    <input type="date" class="form-control" id="start_date" name="start_date" 
+                                    <input type="date" class="form-control" id="start_date" name="start_date"
                                         value="{{ request('start_date', now()->subMonths(6)->format('Y-m-d')) }}">
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
                                     <label for="end_date">Date de fin</label>
-                                    <input type="date" class="form-control" id="end_date" name="end_date" 
+                                    <input type="date" class="form-control" id="end_date" name="end_date"
                                         value="{{ request('end_date', now()->format('Y-m-d')) }}">
                                 </div>
                             </div>
@@ -41,7 +41,7 @@
                                     <select class="form-control" id="currency" name="currency">
                                         <option value="all">Toutes les devises</option>
                                         @foreach($currencies as $currency)
-                                            <option value="{{ $currency->code }}" 
+                                            <option value="{{ $currency->code }}"
                                                 {{ request('currency') == $currency->code ? 'selected' : '' }}>
                                                 {{ $currency->code }} - {{ $currency->name }}
                                             </option>
@@ -57,18 +57,6 @@
                             </div>
                         </div>
                     </form>
-
-                    @if (session('success'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    @if (session('error'))
-                        <div class="alert alert-danger" role="alert">
-                            {{ session('error') }}
-                        </div>
-                    @endif
 
                     <div class="table-responsive">
                         <table class="table table-striped">
@@ -131,4 +119,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection

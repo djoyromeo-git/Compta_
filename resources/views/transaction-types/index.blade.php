@@ -11,18 +11,6 @@
                 </div>
 
                 <div class="card-body">
-                    @if (session('success'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('success') }}
-                        </div>
-                    @endif
-
-                    @if (session('error'))
-                        <div class="alert alert-danger" role="alert">
-                            {{ session('error') }}
-                        </div>
-                    @endif
-
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
@@ -33,7 +21,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($transactionTypes as $type)
+                                @foreach($transaction_types as $type)
                                     <tr>
                                         <td>{{ $type->name }}</td>
                                         <td>
@@ -63,4 +51,4 @@
         </div>
     </div>
 </div>
-@endsection 
+@endsection
