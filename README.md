@@ -1,111 +1,67 @@
 # Compta-ERP
 
-Un système de gestion comptable et ERP open-source développé avec Laravel.
+Compta-ERP est une application web open source de gestion comptable et de planification des ressources d’entreprise (ERP) réalisée avec Laravel 10. Elle permet de suivre les transactions financières de plusieurs sites tout en offrant une interface moderne et des rapports PDF.
 
 [![GitHub Repository](https://img.shields.io/badge/GitHub-Compta--ERP-blue?style=flat&logo=github)](https://github.com/djoyromeo-git/Compta_.git)
 
-## Description
+## Fonctionnalités
 
-Compta-ERP est une application web de gestion comptable et ERP (Enterprise Resource Planning) développée avec le framework Laravel. Elle permet de gérer efficacement les aspects financiers et opérationnels d'une entreprise.
-
-## Aperçu
-
-![Tableau de bord de Compta-ERP](docs/images/dashboard-preview.png)
-
-*Capture d'écran du tableau de bord montrant les statistiques financières, l'évolution mensuelle des transactions et le solde cumulé.*
-
-### Fonctionnalités principales
-
-- Gestion des transactions financières
-- Gestion des devises
-- Gestion des types de transactions
-- Gestion des sites
-- Génération de rapports PDF
-- Interface utilisateur moderne et intuitive
+- Gestion des transactions (création, modification, suppression)
+- Gestion des devises et des types de transaction (débit ou crédit)
+- Administration des sites et des utilisateurs (rôle administrateur ou responsable de site)
+- Tableau de bord avec statistiques et graphiques (Chart.js)
+- Export des transactions et du tableau de bord au format PDF (DomPDF)
 
 ## Prérequis
 
-- PHP 8.1 ou supérieur
-- Composer
-- Base de données MySQL/PostgreSQL
-- Serveur web (Apache/Nginx)
+- PHP ≥ 8.1 et Composer
+- Node.js et npm pour la compilation des assets (Vite)
+- Base de données MySQL ou PostgreSQL
+- Serveur web (Apache ou Nginx)
 
 ## Installation
 
-1. Clonez le dépôt :
 ```bash
 git clone https://github.com/djoyromeo-git/Compta_.git
 cd Compta_
-```
-
-2. Installez les dépendances PHP :
-```bash
 composer install
-```
-
-3. Copiez le fichier d'environnement :
-```bash
+npm install
 cp .env.example .env
-```
-
-4. Générez la clé d'application :
-```bash
 php artisan key:generate
 ```
 
-5. Configurez votre base de données dans le fichier `.env` :
-```
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=compta_erp
-DB_USERNAME=votre_utilisateur
-DB_PASSWORD=votre_mot_de_passe
-```
+Configurez ensuite la connexion à votre base de données dans `.env` puis lancez&nbsp;:
 
-6. Exécutez les migrations et les seeders :
 ```bash
-php artisan migrate --seed
-```
-
-7. Lancez le serveur de développement :
-```bash
+php artisan migrate --seed    # structure et données de démonstration
+npm run build                 # ou `npm run dev` pour un environnement de développement
 php artisan serve
 ```
 
+L’application est maintenant disponible sur `http://localhost:8000`.
+
 ## Structure du projet
 
-- `app/` - Contient la logique principale de l'application
-  - `Http/` - Contrôleurs et requêtes
-  - `Models/` - Modèles Eloquent
-  - `Providers/` - Fournisseurs de services
-- `database/` - Migrations et seeders
-- `public/` - Fichiers publics et assets
-- `resources/` - Vues et assets compilés
-- `routes/` - Routes de l'application
+- `app/` &mdash; contrôleurs, modèles et services Laravel
+- `resources/` &mdash; vues Blade, JavaScript et SASS
+- `database/` &mdash; migrations et seeders
+- `public/` &mdash; fichiers accessibles publiquement
+- `routes/` &mdash; définition des routes Web et API
 
-## Dépendances principales
+## Tests
 
-- Laravel Framework 10.x
-- Laravel Sanctum pour l'authentification
-- Laravel UI pour l'interface utilisateur
-- DomPDF pour la génération de PDF
-- Guzzle pour les requêtes HTTP
+L’exécution de la suite de tests se fait avec&nbsp;:
+
+```bash
+php artisan test
+```
 
 ## Contribution
 
-Les contributions sont les bienvenues ! Pour contribuer :
-
-1. Fork le projet
-2. Créez une branche pour votre fonctionnalité (`git checkout -b feature/AmazingFeature`)
-3. Committez vos changements (`git commit -m 'Add some AmazingFeature'`)
-4. Push vers la branche (`git push origin feature/AmazingFeature`)
-5. Ouvrez une Pull Request
+Les demandes de contribution sont les bienvenues. Forkez le dépôt, créez votre branche (`git checkout -b ma-fonctionnalite`) puis ouvrez une Pull Request.
 
 ## Licence
 
-Ce projet est sous licence MIT. Voir le fichier `LICENSE` pour plus de détails.
+Ce projet est proposé sous licence MIT.
 
-## Support
 
-Pour toute question ou problème, veuillez ouvrir une issue sur GitHub.
